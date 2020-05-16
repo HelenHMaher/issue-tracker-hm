@@ -41,8 +41,8 @@ module.exports = function (app) {
         created_by: req.body.created_by,
         assigned_to: req.body.assigned_to || "",
         status_text: req.body.status_text || "",
-        created_on: new Date(Date.now),
-        updated_on: new Date(Date.now),
+        created_on: new Date(),
+        updated_on: new Date(),
         open: true
       }
       if(!issue.issue_title) {
@@ -73,7 +73,7 @@ module.exports = function (app) {
       }) 
     })
     
-    .put(function (req, res, next){
+    .put((req, res, next) => {
       const project = req.params.project;
       const issueId = req.body._id;
       const issue = req.body;
@@ -89,9 +89,9 @@ module.exports = function (app) {
             console.log('Database err: ' + err);
           } else {
             console.log('Successful database connection');
-            db.collection('issues').findAndModify({_id: issueId},{$set: issue}, {new: true}, (err, doc) => {
+            db.collection('issues').findOneAndUpdate({_id: issueId}, {$set: issue}, {new: true}, (err, doc) => {
               if (!err) {
-                res.send('successfully updated')
+                res.send('successfully updated');
               } else {
                 const error = new Error(`could not update ${issueId} ${err}`);
                 error.status = 400;
@@ -103,11 +103,13 @@ module.exports = function (app) {
       }
     })
     
-    .delete(function (req, res, next){
+    .delete((req, res, next) => {
+      res.status(200).send("works");
       const project = req.params.project;
       const issueId = req.body._id;
-      if(!issueId) {
+      if(issueId === null) {
         const err = new Error('_id error');
+        err.status = 400;
         return next(err);
       } else {
         MongoClient.connect(CONNECTION_STRING, (err, client) => {
@@ -127,8 +129,6 @@ module.exports = function (app) {
           }
         })
       }
-    
-      
     });
   
 };
