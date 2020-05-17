@@ -52,7 +52,7 @@ app.use((err, req, res, next) => {
     errCode = err.status || 404;
     errMessage = err.message || "Not Found";
   }
-  res.status(errCode).json({error: errMessage});
+  res.status(errCode).send({error: errMessage});
 });
 
 //Start our server and tests!
