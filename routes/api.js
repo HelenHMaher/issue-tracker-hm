@@ -25,7 +25,10 @@ module.exports = function (app) {
       const searchQ = req.query;
       if(searchQ.open) searchQ.open === "true" ? searchQ.open = true : searchQ.open = false;
       if(searchQ._id) searchQ._id = new ObjectId(searchQ._id);
-      //console.log(searchQ);
+      if(searchQ.created_on) searchQ.created_on = new Date(searchQ.created_on);
+      if(searchQ.updated_on) searchQ.updated_on = new Date(searchQ.updated_on);
+      Object.keys(searchQ).map((x) => {if(searchQ[x] === "") delete searchQ[x]});
+      console.log(searchQ);
       MongoClient.connect(CONNECTION_STRING, (err, client) => {
         const db = client.db('issueTracker');
         if(err) {
@@ -97,7 +100,7 @@ module.exports = function (app) {
             console.log('Database err: ' + err);
           } else {
             console.log('Successful database connection');
-            db.collection('issues').findOneAndUpdate({_id: issueId}, {$set: issue}, {new: true}, (err, doc) => {
+            db.collection('issues').findOneAndUpdate({_id: new ObjectId(issueId)}, {$set: issue}, {new: true}, (err, doc) => {
               if (!err) {
                 res.send('successfully updated');
               } else {

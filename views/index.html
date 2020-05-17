@@ -38,6 +38,19 @@
     <hr style='margin: 50px'>
     <div id='testui' style='margin-left: 5%'>
       <h2 style="text-align: left">API Tests:</h2>
+      <h3>Get issue on <i>apitest</i></h3>
+      <form id="testForm4" class="border">
+        <input type="text" name="_id" placeholder="_id"><br>
+        <input type="text" name="issue_title" placeholder="Title"><br>
+        <textarea type="text" name="issue_text" placeholder="Text"></textarea><br>
+        <input type="text" name="created_by" placeholder="Created by"><br>
+        <input type="text" name="assigned_to" placeholder="Assigned to"><br>
+        <input type="text" name="status_text" placeholder="Status text"><br>
+        <input type="text" name="created_on" placeholder="created on"><br>
+        <input type="text" name="updated_on" placeholder="updated on"><br>
+        <input type="text" name="open" placeholder="true/false"><br>
+        <button type="submit">Get Issue</button>
+      </form><br>
       <h3>Submit issue on <i>apitest</i></h3>
       <form id="testForm" class="border">
         <input type="text" name="issue_title" placeholder="*Title" style="width: 100px" required=''><br>
@@ -105,6 +118,17 @@
           });
           e.preventDefault();
         });
+        $('#testForm4').submit(function(e) {
+          $.ajax({
+            url: '/api/issues/apitest',
+            type: 'get',
+            data: $('#testForm4').serialize(),
+            success: function(data) {
+              $('#jsonResult').text(JSON.stringify(data));
+            }
+          });
+          e.preventDefault();
+        })
       });
    </script>
   </body>
