@@ -22,13 +22,25 @@ module.exports = function (app) {
   
     .get(function (req, res, next){
       const project = req.params.project;
-    
+      const searchQ = req.query;
+      if(searchQ.open) {
+        searchQ.open = searchQ.open.toLowerCase();
+      }
+      if(searchQ._id) searchQ._id = new ObjectId(searchQ._id);
+      if(searchQ.created_on) searchQ.created_on = new Date(searchQ.created_on);
+      if(searchQ.updated_on) searchQ.updated_on = new Date(searchQ.updated_on);
+      Object.keys(searchQ).map((x) => {if(searchQ[x] === "") delete searchQ[x]});
+      console.log(searchQ);
       MongoClient.connect(CONNECTION_STRING, (err, client) => {
         const db = client.db('issueTracker');
         if(err) {
         console.log('Database err: ' + err);
         } else {
         console.log('Successful database connection');
+        db.collection('issues').find(searchQ).toArray((err, docs) => {
+          if(err) return next(err);
+          res.send(docs)
+        })
         }
       }) 
     })
@@ -43,7 +55,7 @@ module.exports = function (app) {
         status_text: req.body.status_text || "",
         created_on: new Date(),
         updated_on: new Date(),
-        open: true
+        open: "true"
       }
       if(!issue.issue_title) {
         const err = new Error("missing issue_title");
@@ -78,7 +90,8 @@ module.exports = function (app) {
       const issueId = req.body._id;
       const issue = req.body;
       delete issue._id;
-      Object.keys(issue).map((key) => {if(issue.key === null) delete issue.key});
+      Object.keys(issue).map((x) => {if(issue[x] === "") delete issue[x]});
+      //console.log(issue);
       if(Object.keys(issue).length === 0) {
         return res.send('no updated field sent');
       } else {
@@ -89,7 +102,7 @@ module.exports = function (app) {
             console.log('Database err: ' + err);
           } else {
             console.log('Successful database connection');
-            db.collection('issues').findOneAndUpdate({_id: issueId}, {$set: issue}, {new: true}, (err, doc) => {
+            db.collection('issues').findOneAndUpdate({_id: new ObjectId(issueId)}, {$set: issue}, {new: true}, (err, doc) => {
               if (!err) {
                 res.send('successfully updated');
               } else {
@@ -104,26 +117,23 @@ module.exports = function (app) {
     })
     
     .delete((req, res, next) => {
-      res.status(200).send("works");
       const project = req.params.project;
       const issueId = req.body._id;
-      if(issueId === null) {
-        const err = new Error('_id error');
-        err.status = 400;
-        return next(err);
+      console.log(req.params.project);
+      if(!issueId || issueId.length !== 24) {
+        return res.send("_id error");
       } else {
         MongoClient.connect(CONNECTION_STRING, (err, client) => {
           const db = client.db('issueTracker');
           if(err) {
-            console.log('Database err: ' + err);
+            console.log('Database err: '+err);
           } else {
             console.log('Successful database connection');
-            db.collection('issues').findAndRemove({_id: issueId}, (err, doc) => {
+            db.collection('issues').findOneAndDelete({_id:new ObjectId(issueId)}, (err, doc) => {
               if(err) {
-                const error = new Error(`could not delete ${issueId} ${err}`);
-                return next(error);
+                res.send(`could not delete ${issueId} ${err}`);
               } else {
-                res.send(`deleted ${issueId}`);
+                doc.value ? res.send(`deleted ${issueId}`) : res.send(`could not find ${issueId}`);
               }
             })
           }

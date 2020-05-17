@@ -35,32 +35,53 @@
       <br><br>
       <h2><a href='/apitest/'>EXAMPLE: Go to <i>/apitest/</i> project issues</a></h2>
     </div>
+    
+    
     <hr style='margin: 50px'>
+    
+    
     <div id='testui' style='margin-left: 5%'>
       <h2 style="text-align: left">API Tests:</h2>
+      <form id="projectForm" class="border">
+        <input type="test" name="project_name" placeholder="Project name">
+        <button type="submit">Go To Project</button>
+      </form><br>
+      <h3>Get issue on <i>apitest</i></h3>
+      <form id="testForm4" class="border">
+        <input type="text" name="_id" placeholder="_id"><br>
+        <input type="text" name="issue_title" placeholder="Title"><br>
+        <textarea type="text" name="issue_text" placeholder="Text"></textarea><br>
+        <input type="text" name="created_by" placeholder="Created by"><br>
+        <input type="text" name="assigned_to" placeholder="Assigned to"><br>
+        <input type="text" name="status_text" placeholder="Status text"><br>
+        <input type="text" name="created_on" placeholder="Created on (date)"><br>
+        <input type="text" name="updated_on" placeholder="Updated on (date)"><br>
+        <input type="text" name="open" placeholder="open (true/false)"><br>
+        <button type="submit">Get Issue</button>
+      </form><br>
       <h3>Submit issue on <i>apitest</i></h3>
       <form id="testForm" class="border">
-        <input type="text" name="issue_title" placeholder="*Title" style="width: 100px" required=''><br>
-        <textarea type="text" name="issue_text" placeholder="*Text" style="width: 100px" required=''></textarea><br>
-        <input type="text" name="created_by" placeholder="*Created by" style="width: 100px" required=''><br>
-        <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
-        <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
+        <input type="text" name="issue_title" placeholder="*Title" required=''><br>
+        <textarea type="text" name="issue_text" placeholder="*Text" required=''></textarea><br>
+        <input type="text" name="created_by" placeholder="*Created by" required=''><br>
+        <input type="text" name="assigned_to" placeholder="(opt)Assigned to"><br>
+        <input type="text" name="status_text" placeholder="(opt)Status text"><br>
         <button type="submit">Submit Issue</button>
       </form><br>
       <h3>Update issue on <i>apitest</i> (Change any or all to update issue on the _id supplied)</h3>
       <form id="testForm2" class="border">
-        <input type="text" name="_id" placeholder="*_id" style="width: 100px" required=''><br>
-        <input type="text" name="issue_title" placeholder="(opt)Title" style="width: 100px"><br>
-        <textarea type="text" name="issue_text" placeholder="(opt)Text" style="width: 100px"></textarea><br>
-        <input type="text" name="created_by" placeholder="(opt)Created by" style="width: 100px"><br>
-        <input type="text" name="assigned_to" placeholder="(opt)Assigned to" style="width: 100px"><br>
-        <input type="text" name="status_text" placeholder="(opt)Status text" style="width: 100px"><br>
+        <input type="text" name="_id" placeholder="*_id" required=''><br>
+        <input type="text" name="issue_title" placeholder="(opt)Title"><br>
+        <textarea type="text" name="issue_text" placeholder="(opt)Text"></textarea><br>
+        <input type="text" name="created_by" placeholder="(opt)Created by"><br>
+        <input type="text" name="assigned_to" placeholder="(opt)Assigned to"><br>
+        <input type="text" name="status_text" placeholder="(opt)Status text"><br>
         <label><input type="checkbox" name="open" value=false> Check to close issue</label><br>
         <button type="submit">Submit Issue</button>
       </form><br>
       <h3>Delete issue on <i>apitest</i></h3>
-      <form id="testForm2" class="border">
-        <input type="text" name="_id" placeholder="_id" style="width: 100px" required=''><br>
+      <form id="testForm3" class="border">
+        <input type="text" name="_id" placeholder="_id" required=''><br>
         <button type="submit">Delete Issue</button>
       </form>
       <code id='jsonResult'></code>
@@ -105,6 +126,29 @@
           });
           e.preventDefault();
         });
+        $('#testForm4').submit(function(e) {
+          $.ajax({
+            url: '/api/issues/apitest',
+            type: 'get',
+            data: $('#testForm4').serialize(),
+            success: function(data) {
+              $('#jsonResult').text(JSON.stringify(data));
+            }
+          });
+          e.preventDefault();
+        });
+        $('#projectForm').submit(function(e) {
+          $.ajax({
+            url: '/api/issues/:project',
+            type: 'post',
+            data: $('#projectForm').serialize(),
+            success: function(data) {
+              $('#jsonResult').text(JSON.stringify(data));
+            }
+          })
+        e.preventDefault();
+      })
+        
       });
    </script>
   </body>
