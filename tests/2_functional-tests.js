@@ -40,7 +40,7 @@ suite('Functional Tests', function() {
           assert.property(res.body, '_id');
           assert.property(res.body, 'created_on');
           assert.property(res.body, 'updated_on');
-          assert.equal(res.body.open, true);
+          assert.equal(res.body.open, 'true');
           idTest1 = res.body._id;
           done();
         });
@@ -61,7 +61,7 @@ suite('Functional Tests', function() {
           assert.equal(res.body.created_by, 'test');
           assert.equal(res.body.assigned_to, '');
           assert.equal(res.body.status_text, '');
-          assert.equal(res.body.open, true);
+          assert.equal(res.body.open, 'true');
           assert.property(res.body, 'created_on');
           assert.property(res.body, 'updated_on');
           idTest2 = res.body._id;
@@ -153,7 +153,7 @@ suite('Functional Tests', function() {
       test('One filter', function(done) {
         chai.request(server)
         .get('/api/issues/test')
-        .query({status_text: ""})
+        .query({status_text:'In QA'})
         .end((err, res) => {
           assert.equal(res.status, 200);
           assert.isArray(res.body);
@@ -164,7 +164,7 @@ suite('Functional Tests', function() {
           assert.property(res.body[0], 'created_by');
           assert.property(res.body[0], 'assigned_to');
           assert.property(res.body[0], 'open');
-          assert.equal(res.body[0].status_text, "");
+          assert.equal(res.body[0].status_text, 'In QA');
           assert.property(res.body[0], '_id');
           done();
         })
@@ -186,7 +186,7 @@ suite('Functional Tests', function() {
           assert.property(res.body[0], 'updated_on');
           assert.property(res.body[0], 'created_by');
           assert.equal(res.body[0].assigned_to, "Chai and Mocha");
-          assert.equal(res.body[0].open, true);
+          assert.equal(res.body[0].open, 'true');
           assert.property(res.body[0], 'status_text');
           assert.property(res.body[0], '_id');
           done();

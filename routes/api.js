@@ -23,7 +23,9 @@ module.exports = function (app) {
     .get(function (req, res, next){
       const project = req.params.project;
       const searchQ = req.query;
-      if(searchQ.open) searchQ.open === "true" ? searchQ.open = true : searchQ.open = false;
+      if(searchQ.open) {
+        searchQ.open = searchQ.open.toLowerCase();
+      }
       if(searchQ._id) searchQ._id = new ObjectId(searchQ._id);
       if(searchQ.created_on) searchQ.created_on = new Date(searchQ.created_on);
       if(searchQ.updated_on) searchQ.updated_on = new Date(searchQ.updated_on);
@@ -53,7 +55,7 @@ module.exports = function (app) {
         status_text: req.body.status_text || "",
         created_on: new Date(),
         updated_on: new Date(),
-        open: true
+        open: "true"
       }
       if(!issue.issue_title) {
         const err = new Error("missing issue_title");
