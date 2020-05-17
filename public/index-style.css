@@ -1,0 +1,86 @@
+.frontEnd {
+  font-family: geneva, sans-serif;
+  text-align: center;
+  margin: 20px;
+}
+
+footer {
+  margin: auto;
+}
+
+#testui {
+   background: #E6C951;
+  border-radius: 10px;
+  padding: 20px;
+  border: 5px solid lightgrey;
+}
+
+.fullFormSection {
+  display: flex;
+  flex-wrap: wrap;
+  max-height: 1500px;
+ 
+  justify-content: space-around;
+}
+
+.formSection {
+  display: inline-block;
+  width: 220px;
+  background: 	#f3e5ab;
+  margin: 10px;
+  padding: 5px;
+  text-align: center;
+  border-radius: 10px;
+}
+
+input[type='text'], textarea {
+  width: 200px;
+  border: 2px solid lightgrey;
+  border-radius: 5px;
+  margin: 1px;
+  font-size: 12;
+}
+
+input[type='text']:focus, textarea:focus {
+  border: 2px solid grey;
+  outline: none;
+}
+
+input[type='text'] {
+  height: 15px;
+}
+
+button {
+  height: 2rem;
+  border: 2px solid lightgrey;
+  border-radius: 20px;
+  font-size: 12px;
+  margin-top: 10px;
+}
+
+button:active {
+  outline: none;
+  transform: scale(1.2);
+}
+
+button:hover {
+  background: #f5f5dc;
+  border: 2px solid grey;
+}
+
+.jsonResult {
+  min-height: 100px;
+  background: #fffacd;
+  min-width: 300px;
+  border-radius: 15px;
+  text-align: left;
+}
+
+a {
+  color: black;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #E6C951;
+}
