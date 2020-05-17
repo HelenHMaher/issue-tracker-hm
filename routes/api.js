@@ -22,13 +22,20 @@ module.exports = function (app) {
   
     .get(function (req, res, next){
       const project = req.params.project;
-    
+      const searchQ = req.query;
+      if(searchQ.open) searchQ.open === "true" ? searchQ.open = true : searchQ.open = false;
+      if(searchQ._id) searchQ._id = new ObjectId(searchQ._id);
+      //console.log(searchQ);
       MongoClient.connect(CONNECTION_STRING, (err, client) => {
         const db = client.db('issueTracker');
         if(err) {
         console.log('Database err: ' + err);
         } else {
         console.log('Successful database connection');
+        db.collection('issues').find(searchQ).toArray((err, docs) => {
+          if(err) return next(err);
+          res.send(docs)
+        })
         }
       }) 
     })
