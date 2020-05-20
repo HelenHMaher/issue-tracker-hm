@@ -26,7 +26,12 @@ module.exports = function (app) {
       if(searchQ.open) {
         searchQ.open = searchQ.open.toLowerCase();
       }
-      if(searchQ._id) searchQ._id = new ObjectId(searchQ._id);
+      if(searchQ._id) {
+        if(searchQ._id.length !== 24) {
+          return res.send("_id error");
+          }
+        searchQ._id = new ObjectId(searchQ._id);
+        }
       if(searchQ.created_on) searchQ.created_on = new Date(searchQ.created_on);
       if(searchQ.updated_on) searchQ.updated_on = new Date(searchQ.updated_on);
       Object.keys(searchQ).map((x) => {if(searchQ[x] === "") delete searchQ[x]});
@@ -39,7 +44,7 @@ module.exports = function (app) {
         console.log('Successful database connection');
         db.collection('issues').find(searchQ).toArray((err, docs) => {
           if(err) return next(err);
-          res.send(docs)
+          docs.length === 0 ? res.send(`no issues found`) : res.send(docs);
         })
         }
       }) 
@@ -90,6 +95,8 @@ module.exports = function (app) {
       const issueId = req.body._id;
       const issue = req.body;
       delete issue._id;
+      if(!issueId || issueId.length !== 24) {
+        return res.send("_id error");}
       Object.keys(issue).map((x) => {if(issue[x] === "") delete issue[x]});
       //console.log(issue);
       if(Object.keys(issue).length === 0) {
@@ -104,7 +111,7 @@ module.exports = function (app) {
             console.log('Successful database connection');
             db.collection('issues').findOneAndUpdate({_id: new ObjectId(issueId)}, {$set: issue}, {new: true}, (err, doc) => {
               if (!err) {
-                res.send('successfully updated');
+                doc.value ? res.send('successfully updated') : res.send(`could not find ${issueId}`);
               } else {
                 const error = new Error(`could not update ${issueId} ${err}`);
                 error.status = 400;
