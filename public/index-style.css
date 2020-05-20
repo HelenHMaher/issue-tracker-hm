@@ -9,7 +9,7 @@ footer {
 }
 
 #testui {
-   background: #E6C951;
+  background: #E6C951;
   border-radius: 10px;
   padding: 20px;
   border: 5px solid lightgrey;
@@ -56,6 +56,7 @@ button {
   border-radius: 20px;
   font-size: 12px;
   margin-top: 10px;
+  outline: none;
 }
 
 button:active {
@@ -75,6 +76,7 @@ button:hover {
   border-radius: 15px;
   text-align: left;
 }
+
 
 a {
   color: black;
